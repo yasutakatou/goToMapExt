@@ -6,12 +6,19 @@
 </head>
 
 <body>
+	<div id="loginBar">
+		<h3>ログイン</h3>
+		<input id="loginName" type="text" placeholder="user1"><br><br>
+		<div id="loginStat"></div>
+			<button id="login">ログイン</button>
+		</div>
+	</div>
+	<hr>
 	<div id="messageBar">
 		<h3>メッセージ</h3>
 		<input id="message" type="text" placeholder="hello"><br><br>
 		<select id="method">
-			<option>全体に</option>
-			<option>書置き</option>
+			<option>全体に</option><option>書置き</option>
 		</select>
 		<br><br>
 		<div id="sendStat"></div>
@@ -19,7 +26,6 @@
 		</div>
 	</div>
 	<hr>
-
 	<div id="optionBar">
 		<h3>接続サーバー</h3>
 		<input id="server" placeholder="127.0.0.1:8080" type="text"><br><br>
@@ -28,6 +34,12 @@
 			<button id="save">保存</button>
 		</div>
 	</div>
+	<hr>
+	<br>
+	<div id="logs">
+		<button id="logout">ログアウト</button>
+	</div>
 </body>
+<script src="jquery-3.3.1.min.js"></script>
 <script src="options.js"></script>
 </html>

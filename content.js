@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(function (message) {
 			test.style.display = 'block';
 			testText.style.display = 'block';
 		} else {
-			testText.textContent = message;	
+			testText.innerHTML = message;	
 			test.style.display = 'block';
 			testText.style.display = 'block';
 		}

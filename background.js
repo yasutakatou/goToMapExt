@@ -3,11 +3,10 @@ let ws;
 let url = "";
 let bakAction = "";
 var socket;
+let socket_Flag = "false";
 
 if (window.WebSocket === undefined) {
-	console.log("Your browser does not support WebSockets");
-} else {
-	ws = initWS();
+	alert("Your browser does not support WebSockets");
 }
 
 function initWS() {
@@ -19,7 +18,8 @@ function initWS() {
 	socket = new WebSocket("ws://" + server + "/ws");
 
 	socket.onopen = function(e) {
-		console.log("Socket is open");
+		socket_Flag = "true";
+		console.log("Server: " + server + " connected!");
 		e.preventDefault();
 	};
 	socket.onmessage = function (e) {
@@ -28,42 +28,69 @@ function initWS() {
 		if (obj.Command == "goto") {
 			chrome.tabs.create({ url:obj.Data });
 		}
+		if (obj.Command == "list") {
+			var lists = chrome.extension.connect({name: "list"});
+			lists.postMessage({command: obj.Command, message: obj.Data});
+		}
 		if (obj.Command == "message") {
+			console.log(obj);
 			if (bakAction != obj.Data) {
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 					chrome.tabs.sendMessage(tabs[0].id, obj.Data);
 					bakAction = obj.Data;
-					e.preventDefault();
 				});
 			}
 		}
-		e.preventDefault();
+		if (obj.Command == "error") {
+			alert(obj.Data);
+		}
 	}
 	socket.onclose = function (e) {
-		console.log("Socket closed");
+		socket_Flag = "false";
+		alert("Server: " + server + " not connect.");
 		e.preventDefault();
 	}
 	return socket;
 }
 
-chrome.extension.onConnect.addListener(function(port) {
-	port.onMessage.addListener(function(msg) {
-		if (msg.command == "全体に") {
-			sendServer(JSON.stringify({ Command: "cast", Data: msg.message }));
-		}
-		if (msg.command == "書置き") {
-			sendServer(JSON.stringify({ Command: "crumb", Data: msg.message }));
+chrome.extension.onConnect.addListener(function(checkWS) {
+	checkWS.onMessage.addListener(function() {
+		console.log(socket);
+		var resultWS = chrome.extension.connect({name: "resultWS"});
+		resultWS.postMessage(socket_Flag);
+	});
+});
+
+chrome.extension.onConnect.addListener(function(lout) {
+	lout.onMessage.addListener(function(msg) {
+		console.log(msg);
+		if (msg.command == "lout") {
+			sendServer(JSON.stringify({ Command: "logout", Data: msg.message }));
+			ws.close();
 		}
 	});
-  });
+});
+
+chrome.extension.onConnect.addListener(function(port) {
+	port.onMessage.addListener(function(msg) {
+		if (msg.command == "start") {
+			ws = initWS();
+			setTimeout(function () {
+				sendServer(JSON.stringify({ Command: msg.command, Data: msg.message }));				
+			}, 2000);
+		} else {
+			sendServer(JSON.stringify({ Command: msg.command, Data: msg.message }));
+		}
+	});
+});
 
 function sendServer(strs) {
 	socket.send(strs);
 }
 
-setTimeout(function () {
-	ws.send(JSON.stringify({ Command: "start", Data: "test" }));
-} ,1000);
+// setTimeout(function () {
+// 	ws.send(JSON.stringify({ Command: "start", Data: "test" }));
+// } ,1000);
 
 function pushURL(){
 	chrome.tabs.getSelected(null,function(tab) {
