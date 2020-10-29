@@ -1,5 +1,6 @@
 let menu_flg = false;
 let userName;
+let userPic;
 let serverIP;
 
 window.onload = function() {
@@ -100,17 +101,26 @@ chrome.extension.onConnect.addListener(function(resultWS) {
 
 function userLogin() {
 	var loginName = document.getElementById( "loginName" ).value;
+	var avaPicture = document.getElementById( "avaPicture" ).value;
 
 	if (loginName.length < 4) {
 		alert("4文字以上のユーザー名を指定してください");
 		return
 	}
 
+	if (avaPicture.length < 4) {
+		alert("アバター画像を指定してください");
+		return
+	}
+
 	window.localStorage.setItem("logon", loginName);
 	userName = loginName;
 
+	window.localStorage.setItem("picture", avaPicture);
+	userPic = avaPicture;
+
 	var port = chrome.extension.connect({name: "loginReq"});
-	port.postMessage({command: "start", message: userName});
+	port.postMessage({command: "start", message: userName+";"+userPic});
 
 	// Update status to let user know options were saved.
 	var logins = document.createElement( "div" );
