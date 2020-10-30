@@ -36,7 +36,12 @@ window.onload = function() {
 
 chrome.runtime.onMessage.addListener(function (message) {
 	if (bakAction != message) {
-		if (message.indexOf("http") > -1) {
+		if (message.indexOf("avater;") == 0) {
+			var strs = message.split(";");
+			testText.innerHTML = strs[1] + "<br><img src =\"" + strs[2] + "\">";
+			test.style.display = 'block';
+			testText.style.display = 'block';
+		} else if (message.indexOf("http") == 0) {
 			testText.innerHTML = "<img src =\"" + message + "\">";
 			test.style.display = 'block';
 			testText.style.display = 'block';
