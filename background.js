@@ -34,12 +34,16 @@ function initWS() {
 		}
 		if (obj.Command == "message") {
 			console.log(obj);
-			if (bakAction != obj.Data) {
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-					chrome.tabs.sendMessage(tabs[0].id, obj.Data);
-					bakAction = obj.Data;
-				});
-			}
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+				chrome.tabs.sendMessage(tabs[0].id, obj.Data);
+				bakAction = obj.Data;
+			});
+			// if (bakAction != obj.Data) {
+			// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			// 		chrome.tabs.sendMessage(tabs[0].id, obj.Data);
+			// 		bakAction = obj.Data;
+			// 	});
+			// }
 		}
 		if (obj.Command == "error") {
 			alert(obj.Data);
