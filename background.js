@@ -33,17 +33,10 @@ function initWS() {
 			lists.postMessage({command: obj.Command, message: obj.Data});
 		}
 		if (obj.Command == "message") {
-			console.log(obj);
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 				chrome.tabs.sendMessage(tabs[0].id, obj.Data);
 				bakAction = obj.Data;
 			});
-			// if (bakAction != obj.Data) {
-			// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			// 		chrome.tabs.sendMessage(tabs[0].id, obj.Data);
-			// 		bakAction = obj.Data;
-			// 	});
-			// }
 		}
 		if (obj.Command == "error") {
 			alert(obj.Data);
@@ -59,7 +52,6 @@ function initWS() {
 
 chrome.extension.onConnect.addListener(function(checkWS) {
 	checkWS.onMessage.addListener(function() {
-		console.log(socket);
 		var resultWS = chrome.extension.connect({name: "resultWS"});
 		resultWS.postMessage(socket_Flag);
 	});
@@ -67,7 +59,6 @@ chrome.extension.onConnect.addListener(function(checkWS) {
 
 chrome.extension.onConnect.addListener(function(lout) {
 	lout.onMessage.addListener(function(msg) {
-		console.log(msg);
 		if (msg.command == "lout") {
 			sendServer(JSON.stringify({ Command: "logout", Data: msg.message }));
 			ws.close();

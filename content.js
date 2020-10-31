@@ -49,24 +49,6 @@ chrome.runtime.onMessage.addListener(function (message) {
 		test.style.display = 'block';
 		testText.style.display = 'block';
 	}
-	console.log(message);
-	// if (bakAction != message) {
-	// 	if (message.indexOf("avater;") == 0) {
-	// 		var strs = message.split(";");
-	// 		testText.innerHTML = strs[1] + "<br><img src =\"" + strs[2] + "\">";
-	// 		test.style.display = 'block';
-	// 		testText.style.display = 'block';
-	// 	} else if (message.indexOf("http") == 0) {
-	// 		testText.innerHTML = "<img src =\"" + message + "\">";
-	// 		test.style.display = 'block';
-	// 		testText.style.display = 'block';
-	// 	} else {
-	// 		testText.innerHTML = message;	
-	// 		test.style.display = 'block';
-	// 		testText.style.display = 'block';
-	// 	}
-	// 	bakAction = message;
-	// }
 });
 
 test.onclick = function(e) {
